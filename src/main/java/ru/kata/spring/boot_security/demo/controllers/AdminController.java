@@ -37,28 +37,4 @@ public class AdminController {
         return "admin/currentAdminUser";
     }
 
-    @GetMapping("/newUser")
-    public String showNewUser(@ModelAttribute("newuser") User user, Model model, Principal principal) {
-        model.addAttribute("currentUser", userService.findByName(principal.getName()));
-        model.addAttribute("allRoles", roleRepository.findAll());
-        return "admin/newUser";
-    }
-
-    @PostMapping()
-    public String addToDB(@ModelAttribute("newuser") User user) {
-        userService.save(user);
-        return "redirect:/admin";
-    }
-
-    @PostMapping("/{id}/delete")
-    public String deleteFromDB(User user) {
-        userService.delete(user);
-        return "redirect:/admin";
-    }
-
-    @PostMapping("/{id}/update")
-    public String updateUserFromDB(@ModelAttribute("user") User user) {
-        userService.update(user);
-        return "redirect:/admin";
-    }
 }

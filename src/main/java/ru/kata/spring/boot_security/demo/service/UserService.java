@@ -68,15 +68,8 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    public boolean delete(User user) {
-        User desiredUser = userRepository.getById(user.getId());
-        if (desiredUser == null) {
-            System.out.println("Пользователь не найден");
-            return false;
-        }
-        desiredUser.getRoles().clear();
-        userRepository.delete(desiredUser);
-        return true;
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
