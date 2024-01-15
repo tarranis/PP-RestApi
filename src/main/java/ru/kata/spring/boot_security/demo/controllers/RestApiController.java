@@ -1,33 +1,29 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class RestApiController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final RoleRepository roleRepository;
 
-    @Autowired
-    public RestApiController(UserService userService, RoleRepository roleRepository) {
-        this.userService = userService;
+    public RestApiController(UserServiceImpl userServiceImpl, RoleRepository roleRepository) {
+        this.userServiceImpl = userServiceImpl;
         this.roleRepository = roleRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<User>> printAllUsers() {
-        List<User> allUsers = userService.getAll();
+        List<User> allUsers = userServiceImpl.getAll();
         if (allUsers.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -36,7 +32,7 @@ public class RestApiController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> printUser(@PathVariable Long id) {
-        User user = userService.findById(id);
+        User user = userServiceImpl.findById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -57,7 +53,7 @@ public class RestApiController {
         if (user == null) {
             return ResponseEntity.badRequest().build();
         }
-        userService.save(user);
+        userServiceImpl.save(user);
         return ResponseEntity.ok(user);
     }
 
@@ -66,18 +62,18 @@ public class RestApiController {
         if (user == null) {
             return ResponseEntity.badRequest().build();
         }
-        userService.update(user);
+        userServiceImpl.update(user);
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable Long id) {
-        User user = userService.findById(id);
+        User user = userServiceImpl.findById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
         user.getRoles().clear();
-        userService.delete(id);
+        userServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
 
